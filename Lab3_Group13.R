@@ -1,5 +1,6 @@
 library(ggplot2)
 library(plotly)
+library(ggmap)
 
 
 #Reading file
@@ -39,6 +40,13 @@ swedimage$Young<-new_swedfile[swedimage$NAME_1,"Young"]
 swedimage$Adult<-new_swedfile[swedimage$NAME_1,"Adult"]
 
 #Plotting chlorpeth plot of sweden counties based on mean income of Young and Adult respectively.)
-p<-plot_ly() %>% add_sf(data = swedimage,color=~Young,split=~NAME_1,colors="Reds")
-
+p<-plot_ly() %>% add_sf(data = swedimage,color=~Young,split=~NAME_1,colors="Purples") 
 p2<-plot_ly() %>% add_sf(data = swedimage,color=~Adult,split=~NAME_1,colors="Blues")
+
+#Creating a dataframe with coordinate of Linköping city to show in a map
+linkplot<-data.frame("Linköping",58.409814,15.624525)
+colnames(linkplot)<-c("City","Latitude","Longitude")
+
+#Plotting Linköping coordinate in pre existing map
+p2 %>% add_markers(data=linkplot,x=~Longitude,y=~Latitude,hoverinfo="text",text=~City)
+
