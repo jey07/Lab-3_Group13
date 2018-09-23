@@ -1,7 +1,7 @@
 library(ggplot2)
 library(plotly)
 library(ggmap)
-
+library(akima)
 
 #Reading file
 swedfile<-read.csv("Swedish_Household.csv")
@@ -30,6 +30,13 @@ p<-ggplot(swedfile,aes(Age,Mean_Income,color=Age)) + geom_violin()
    
   p+stat_summary(fun.y=median,geom="point",color="blue") +xlab("\n Age Group ") +
   ylab("Mean Income in SEK\n")
+
+#Doing a cubic interpolation to get continous variable and creating a surace plot
+  interpolated=interp(new_swedfile$Young,new_swedfile$Adult,new_swedfile$Senior,duplicate = "mean")
+  plot_ly(x=~interpolated$x, y=~interpolated$y, z=~interpolated$z, type="surface")
+  
+#Creating a surface plot
+  plot_ly(new_swedfile[,2:4]) %>% add_surface()
   
 #Modifying the rownames  
 rownames(new_swedfile)<-new_swedfile$Region
